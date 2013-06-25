@@ -76,6 +76,8 @@
         }
       }
     }
+
+    return this;
   };
 
   var VectorCanvas = function (width, height, params) {
@@ -351,8 +353,6 @@
         break;
       }
 
-      return '';
-
     }).replace(/z/g, '');
   };
 
@@ -566,15 +566,17 @@
     setSelectedRegions: function (regions) {
       var that = this;
 
-      $.each(regions, function (key, value) {
-        that.select(value.toLowerCase());
-      });
+      if ($.isArray(regions)) {
+        $.each(regions, function (key, value) {
+          that.select(value.toLowerCase());
+        });
+      }
     },
 
     setValues: function (values) {
       var max = 0,
-      min = Number.MAX_VALUE,
-      val;
+        min = Number.MAX_VALUE,
+        val;
 
       for (var cc in values) {
         if (values.hasOwnProperty(cc)) {
