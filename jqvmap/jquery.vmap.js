@@ -464,15 +464,13 @@
       var code = e.target.id.split('_').pop();
 
       jQuery(params.container).trigger('regionClick.jqvmap', [code, mapData.pathes[code].name]);
-      if (!regionClickEvent.isDefaultPrevented()) {
+      if (!e.isDefaultPrevented()) {
         if (map.selectedRegions.indexOf(code) !== -1) {
           map.deselect(code, path);
         } else {
           map.select(code, path);
         }
       }
-
-      //console.log(selectedRegions);
 
     });
 
@@ -556,15 +554,21 @@
         this.countries[key].setFill(color);
         this.countries[key].setAttribute("original", color);
       } else {
-        var colors = key;
-
-        for (var code in colors) {
-          if (this.countries[code]) {
+        for (var code in key) {
+          if (key.hasOwnProperty(code) && this.countries[code]) {
             this.countries[code].setFill(colors[code]);
             this.countries[code].setAttribute("original", colors[code]);
           }
         }
       }
+    },
+
+    setSelectedRegions: function (regions) {
+      var that = this;
+
+      $.each(regions, function (key, value) {
+        that.select(value.toLowerCase());
+      });
     },
 
     setValues: function (values) {
@@ -573,12 +577,14 @@
       val;
 
       for (var cc in values) {
-        val = parseFloat(values[cc]);
-        if (val > max) {
-          max = values[cc];
-        }
-        if (val && val < min) {
-          min = val;
+        if (values.hasOwnProperty(cc)) {
+          val = parseFloat(values[cc]);
+          if (val > max) {
+            max = values[cc];
+          }
+          if (val && val < min) {
+            min = val;
+          }
         }
       }
 
@@ -587,11 +593,13 @@
 
       var colors = {};
       for (cc in values) {
-        val = parseFloat(values[cc]);
-        if (val) {
-          colors[cc] = this.colorScale.getColor(val);
-        } else {
-          colors[cc] = this.color;
+        if (values.hasOwnProperty(cc)) {
+          val = parseFloat(values[cc]);
+          if (val) {
+            colors[cc] = this.colorScale.getColor(val);
+          } else {
+            colors[cc] = this.color;
+          }
         }
       }
       this.setColors(colors);
@@ -638,6 +646,7 @@
 
     select: function (cc, path) {
       path = path || $('#' + this.getCountryId(cc))[0];
+
       if(this.selectedRegions.indexOf(cc) < 0) {
         if (this.multiSelectRegion) {
           this.selectedRegions.push(cc);
@@ -740,9 +749,6 @@
       this.container.mousemove(function (e) {
 
         if (mouseDown) {
-          var curTransX = self.transX;
-          var curTransY = self.transY;
-
           self.transX -= (oldPageX - e.pageX) / self.scale;
           self.transY -= (oldPageY - e.pageY) / self.scale;
 
