@@ -45,3 +45,7 @@ syntax: regexp
 .*.swp
 /nbproject/private/
 /nbproject/
+# Node dependencies
+/node_modules
+# Bower components
+/components

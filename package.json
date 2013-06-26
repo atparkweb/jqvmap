@@ -1,0 +1,31 @@
+{
+  "name": "jqvmap",
+  "version": "0.0.0",
+  "description": "![JQVMap](http://jqvmap.com/img/logo.png \"JQVMap\")",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atparkweb/jqvmap.git"
+  },
+  "keywords": [
+    "map",
+    "vector",
+    "svg",
+    "vml",
+    "jquery"
+  ],
+  "author": "Andy Park",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "29ac91d3118fbc3ce022b086b727cbd9b78ee6c3",
+  "bugs": {
+    "url": "https://github.com/atparkweb/jqvmap/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2"
+  }
+}

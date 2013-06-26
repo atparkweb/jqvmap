@@ -10,6 +10,39 @@
  * Fork Me @ https://github.com/manifestinteractive/jqvmap
  */
 (function ($) {
+  if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+      "use strict";
+      if (this == null) {
+        throw new TypeError();
+      }
+      var t = Object(this);
+      var len = t.length >>> 0;
+
+      if (len === 0) {
+        return -1;
+      }
+      var n = 0;
+      if (arguments.length > 1) {
+        n = Number(arguments[1]);
+        if (n != n) { // shortcut for verifying if it's NaN
+          n = 0;
+        } else if (n != 0 && n != Infinity && n != -Infinity) {
+          n = (n > 0 || -1) * Math.floor(Math.abs(n));
+        }
+      }
+      if (n >= len) {
+        return -1;
+      }
+      var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+      for (; k < len; k++) {
+        if (k in t && t[k] === searchElement) {
+          return k;
+        }
+      }
+      return -1;
+    }
+  }
 
   var apiParams = {
     colors: 1,
@@ -360,6 +393,7 @@
     params = params || {};
     var map = this;
     var mapData = WorldMap.maps[params.map];
+    this.mapData = mapData;
 
     this.selectedRegions = [];
     this.multiSelectRegion = params.multiSelectRegion;
@@ -453,6 +487,7 @@
     });
 
     jQuery(params.container).delegate(this.canvas.mode == 'svg' ? 'path' : 'shape', 'click', function (e) {
+
       if (!params.multiSelectRegion) {
         for (var key in mapData.pathes) {
           map.countries[key].currentFillColor = map.countries[key].getOriginalFill();
@@ -507,12 +542,12 @@
     }
 
     if (params.selectedRegions) {
-      if (params.selectedRegions instanceof Array) {
+      if ($.isArray(params.selectedRegions)) {
         for(var k in params.selectedRegions) {
-          this.select(params.selectedRegions[k].toLowerCase());
+          this.select(params.selectedRegions[k].toString().toLowerCase());
         }
       } else {
-        this.select(params.selectedRegions.toLowerCase());
+        this.select(params.selectedRegions.toString().toLowerCase());
       }
     }
 
@@ -565,6 +600,15 @@
 
     setSelectedRegions: function (regions) {
       var that = this;
+
+      if (!this.multiSelectRegion) {
+        for (var key in this.mapData.pathes) {
+          that.countries[key].currentFillColor = that.countries[key].getOriginalFill();
+          that.countries[key].setFill(that.countries[key].getOriginalFill());
+        }
+
+        this.selectedRegions = [];
+      }
 
       if ($.isArray(regions)) {
         $.each(regions, function (key, value) {
@@ -658,10 +702,12 @@
         // MUST BE after the change of selectedRegions
         // Otherwise, we might loop
         $(this.container).trigger('regionSelect.jqvmap', [cc]);
-        if (this.selectedColor) {
+        if (path && this.selectedColor) {
           path.currentFillColor = this.selectedColor;
           path.setFill(this.selectedColor);
         }
+      } else {
+        throw new Error('fuck');
       }
     },
 
