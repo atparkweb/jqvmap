@@ -514,12 +514,12 @@
         if (map.label.is(':visible')) {
             var left = e.pageX - 15 - map.labelWidth;
             var top = e.pageY - 15 - map.labelHeight;
-            
+
             if(left < 0)
                left = e.pageX + 15;
             if(top < 0)
                 top = e.pageY + 15;
-            
+
             map.label.css({
                 left: left,
                 top: top
@@ -552,7 +552,7 @@
     }
 
     this.bindZoomButtons();
-    
+
     if(params.pins) {
       /*if(params.pinMode) {
           if(params.pinMode != "id" && params.pinMode != "content") {
@@ -591,8 +591,8 @@
       } else {
         for (var code in key) {
           if (key.hasOwnProperty(code) && this.countries[code]) {
-            this.countries[code].setFill(colors[code]);
-            this.countries[code].setAttribute("original", colors[code]);
+            this.countries[code].setFill(key[code]);
+            this.countries[code].setAttribute("original", key[code]);
           }
         }
       }
@@ -845,7 +845,7 @@
         map.zoomOut();
       });
     },
-    
+
     zoomIn: function () {
       var map = this;
       var sliderDelta = (jQuery('#zoom').innerHeight() - 6 * 2 - 15 * 2 - 3 * 2 - 7 - 6) / (this.zoomMaxStep - this.zoomCurStep);
@@ -861,11 +861,11 @@
         map.zoomCurStep++;
 
         jQuery('#zoomSlider').css('top', parseInt(jQuery('#zoomSlider').css('top'), 10) - sliderDelta);
-        
+
         map.container.trigger("zoomIn");
       }
     },
-    
+
     zoomOut: function () {
       var map = this;
       var sliderDelta = (jQuery('#zoom').innerHeight() - 6 * 2 - 15 * 2 - 3 * 2 - 7 - 6) / (this.zoomMaxStep - this.zoomCurStep);
@@ -881,7 +881,7 @@
         map.zoomCurStep--;
 
         jQuery('#zoomSlider').css('top', parseInt(jQuery('#zoomSlider').css('top'), 10) + sliderDelta);
-        
+
         map.container.trigger("zoomOut");
       }
     },
@@ -898,7 +898,7 @@
     getPinId: function (cc) {
       return this.getCountryId(cc)+'_pin';
     },
-    
+
     placePins: function(pins, pinMode){
       var map = this;
 
@@ -1035,6 +1035,7 @@
       for (var i = 0; i < colors.length; i++) {
         colors[i] = ColorScale.rgbToArray(colors[i]);
       }
+
       this.colors = colors;
     },
 
